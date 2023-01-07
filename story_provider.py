@@ -6,6 +6,10 @@ from util.story_utility import StoryUtility
 
 
 class StoryProvider:
+	"""
+	Provide the contents of the story (image and text).
+	"""
+
 	def __init__(self, story_utility: StoryUtility, story_content_generator: StoryContentGenerator):
 		self.story_utility = story_utility
 		self.story_content_generator = story_content_generator

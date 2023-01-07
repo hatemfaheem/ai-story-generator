@@ -9,6 +9,15 @@ from processors.video_processor import VideoProcessor
 
 
 class StoryManager:
+    """
+    Given Story Content (Image and Text), this class will:
+     1. Generate audio.
+     2. Create pages.
+     3. Generate video.
+     4. Generate keywords.
+     5. Create PDF.
+    """
+
     def __init__(self,
                  audio_generator: AudioGenerator,
                  keywords_generator: KeywordsGenerator,

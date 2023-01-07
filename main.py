@@ -18,6 +18,7 @@ from util.story_utility import StoryUtility
 
 
 def create_story_provider(openai_creds_json_filepath: str) -> StoryProvider:
+    """A factory-like method for the story provider."""
     story_utility = StoryUtility()
     text_processor = TextProcessor()
     text_generator = TextGenerator(text_processor=text_processor)
@@ -30,6 +31,7 @@ def create_story_provider(openai_creds_json_filepath: str) -> StoryProvider:
 
 
 def create_story_manager() -> StoryManager:
+    """A factory-like method for the story manager."""
     audio_generator = AudioGenerator()
     keybert_model = KeyBERT()
     keywords_generator = KeywordsGenerator(model=keybert_model)
