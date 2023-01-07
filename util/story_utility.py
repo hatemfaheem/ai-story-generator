@@ -8,16 +8,17 @@ from data_models import StoryContent, CombinedWorkdir
 class StoryUtility:
 
     @staticmethod
-    def save_story(workdir: str, story_content: StoryContent) -> str:
+    def save_story(workdir: str, story_content: StoryContent) -> None:
         """
-        Save the given story into a pickle file
+        Save the given story to disk
         :param workdir: directory where to save the story
         :param story_content: contents of the story
         """
-        filepath = os.path.join(workdir, f"story_content.pickle")
-        with open(filepath, "wb") as file:
+        with open(os.path.join(workdir, f"story_content.pickle"), "wb") as file:
             pickle.dump(story_content, file)
-        return filepath
+
+        with open(os.path.join(workdir, f"raw_story.txt"), "w") as f:
+            f.write(story_content.raw_text)
 
     @staticmethod
     def load_story_from_pickle(pickle_file: str) -> StoryContent:
