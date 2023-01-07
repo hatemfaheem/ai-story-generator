@@ -17,11 +17,6 @@ from util.openai_credentials_provider import OpenAICredentialsProvider
 from util.story_utility import StoryUtility
 
 
-# Todo: test pickle unknown object (story_generator)
-# Todo: Add to github
-# Todo: unit testing
-
-
 def create_story_provider(openai_creds_json_filepath: str) -> StoryProvider:
     story_utility = StoryUtility()
     text_processor = TextProcessor()
