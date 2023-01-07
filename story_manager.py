@@ -1,0 +1,46 @@
+from typing import List
+
+from data_models import Story, StoryPage, StoryContent, CombinedWorkdir
+from generators.audio_generator import AudioGenerator
+from generators.keywords_generator import KeywordsGenerator
+from processors.page_processor import PageProcessor
+from processors.pdf_processor import PdfProcessor
+from processors.video_processor import VideoProcessor
+
+
+class StoryManager:
+    def __init__(self,
+                 audio_generator: AudioGenerator,
+                 keywords_generator: KeywordsGenerator,
+                 page_processor: PageProcessor,
+                 pdf_processor: PdfProcessor,
+                 video_processor: VideoProcessor):
+        self.audio_generator = audio_generator
+        self.keywords_generator = keywords_generator
+        self.page_processor = page_processor
+        self.pdf_processor = pdf_processor
+        self.video_processor = video_processor
+
+    def invoke(self, combined_workdir: CombinedWorkdir, story_content: StoryContent):
+        story_pages: List[StoryPage] = []
+        for page_content in story_content.page_contents:
+            audio = self.audio_generator.generate_audio(workdir=combined_workdir.workdir_audio, story_page_content=page_content)
+            page: StoryPage = self.page_processor.create_page(workdir=combined_workdir.workdir_pages, story_page_content=page_content, audio=audio)
+            story_pages.append(page)
+
+        start_page_filepath = self.page_processor.create_start_page(
+            workdir=combined_workdir.workdir_pages, prompt=story_content.story_seed)
+        end_page_filepath = self.page_processor.create_end_page(workdir=combined_workdir.workdir_pages)
+        keywords = self.keywords_generator.generate_keywords(story_content=story_content)
+
+        story = Story(
+            story_seed=story_content.story_seed,
+            story_raw_text=story_content.raw_text,
+            pages=story_pages,
+            start_page_filepath=start_page_filepath,
+            end_page_filepath=end_page_filepath,
+            keywords=keywords
+        )
+
+        self.pdf_processor.create_pdf(workdir=combined_workdir.workdir, story=story)
+        self.video_processor.generate_video(workdir=combined_workdir.workdir, story=story)
