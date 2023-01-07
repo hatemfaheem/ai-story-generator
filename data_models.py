@@ -4,12 +4,12 @@ from typing import List
 from PIL import Image
 
 
+@dataclass
 class StoryPageContent:
-    def __init__(self, sentence: str, image: Image, image_path: str, number: str):
-        self.sentence: str = sentence
-        self.image: Image = image
-        self.image_path: str = image_path
-        self.page_number: str = number
+    sentence: str
+    image: Image
+    image_path: str
+    page_number: str
 
 
 @dataclass
