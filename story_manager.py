@@ -40,7 +40,7 @@ class StoryManager:
         start_page_filepath = self.page_processor.create_start_page(
             workdir=combined_workdir.workdir_pages, prompt=story_content.story_seed)
         end_page_filepath = self.page_processor.create_end_page(workdir=combined_workdir.workdir_pages)
-        keywords = self.keywords_generator.generate_keywords(story_content=story_content)
+        keywords = self.keywords_generator.generate_keywords(workdir=combined_workdir.workdir, story_content=story_content)
 
         story = Story(
             story_seed=story_content.story_seed,
