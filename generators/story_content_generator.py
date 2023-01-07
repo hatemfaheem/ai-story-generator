@@ -35,7 +35,7 @@ class StoryContentGenerator:
 				sentence=processed_sentences[i],
 				image=image,
 				image_path=image_path,
-				number=image_number)
+				page_number=image_number)
 			page_contents.append(story_page_content)
 
 		return StoryContent(story_seed=story_seed_prompt, raw_text=raw_text, page_contents=page_contents)
