@@ -1,7 +1,9 @@
 # ai-story-generator
-Generate stories using AI
+Generate stories using AI. From text to story (pdf and video).
 
-From text to story (pdf and video).
+Example videos can be found here: https://www.youtube.com/@ai-story
+
+A sample story can be found under _stories, raw content, `final_video.mp4` and `final_story.pdf`
 
 ## Prerequisuites
 
