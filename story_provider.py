@@ -46,9 +46,7 @@ class StoryProvider:
             assert story_prompt is not None
             # If a pickle file is not provided, create a new workdir first based on the given story prompt.
             # Then, generate a new story.
-            combined_workdir = self.story_utility.new_workdir(
-                story_prompt
-            )
+            combined_workdir = self.story_utility.new_workdir(story_prompt)
             story_content = self.story_content_generator.generate_new_story(
                 workdir_images=combined_workdir.workdir_images,
                 story_seed_prompt=story_prompt,

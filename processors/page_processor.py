@@ -27,9 +27,7 @@ class PageProcessor:
                 story_page_content.image, text_img
             )
         else:
-            page_image = self._concat_horizontally(
-                text_img, story_page_content.image
-            )
+            page_image = self._concat_horizontally(text_img, story_page_content.image)
 
         page_filepath = os.path.join(
             workdir, f"page_{story_page_content.page_number}.png"
@@ -71,7 +69,9 @@ class PageProcessor:
         return page_filepath
 
     @staticmethod
-    def _concat_horizontally(image_left: Image.Image, image_right: Image.Image) -> Image.Image:
+    def _concat_horizontally(
+        image_left: Image.Image, image_right: Image.Image
+    ) -> Image.Image:
         """Concatenate the given 2 images horizontally by putting them next to each other"""
 
         if image_left.height != image_right.height:
@@ -98,7 +98,7 @@ class PageProcessor:
         """
         message = message.replace("\n", "")
         words = message.split()
-        splits = [words[i: i + chunk_size] for i in range(0, len(words), chunk_size)]
+        splits = [words[i : i + chunk_size] for i in range(0, len(words), chunk_size)]
         sentences = [" ".join(spl) for spl in splits]
         return "\n".join(sentences)
 
