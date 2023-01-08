@@ -25,7 +25,7 @@ class VideoProcessor:
         """
         page_clips = []
         audio_clips = []
-        current_start = 0
+        current_start = 0.0
         for i in range(len(story.pages)):
             page = story.pages[i]
             page_clip = mpy.ImageClip(page.page_filepath).set_duration(

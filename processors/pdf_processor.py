@@ -15,9 +15,9 @@ class PdfProcessor:
         """Create PDF for the given story."""
 
         pdf = FPDF(orientation=self._ORIENTATION, format=self._FORMAT)
-        pdf_file = os.path.join(workdir, self._FILENAME)
+        pdf_filepath = os.path.join(workdir, self._FILENAME)
         for page in story.pages:
             pdf.add_page()
             pdf.image(page.page_filepath)
-        pdf.output(pdf_file, self._SAVE_TO_LOCAL_FILE)
-        return pdf_file
+        pdf.output(pdf_filepath, self._SAVE_TO_LOCAL_FILE)
+        return pdf_filepath

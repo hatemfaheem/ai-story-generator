@@ -9,5 +9,5 @@ class TextProcessor:
         return [self._clean_text(sentence) for sentence in story_sentences if sentence]
 
     @staticmethod
-    def _clean_text(text):
+    def _clean_text(text: str) -> str:
         return text.strip().replace("\n", "")

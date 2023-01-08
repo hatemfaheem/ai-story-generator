@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, Tuple
 
 from data_models import StoryContent, CombinedWorkdir
 from generators.story_content_generator import StoryContentGenerator
@@ -20,7 +20,7 @@ class StoryProvider:
 
     def generate_or_load(
         self, story_prompt: Optional[str], pickle_file: Optional[str]
-    ) -> [CombinedWorkdir, StoryContent]:
+    ) -> Tuple[CombinedWorkdir, StoryContent]:
         """Generate a new story or load existing story from pickle file."""
 
         if story_prompt is None and pickle_file is None:
@@ -32,6 +32,7 @@ class StoryProvider:
             )
 
         if pickle_file:
+            assert pickle_file is not None
             # If a pickle file is provided, read it then create a new workdir based on the observed story seed.
             # This enables continuation without recalling expensive text/image generation APIs.
             # And it also avoids overriding previous work, always create a new workdir.
@@ -42,9 +43,10 @@ class StoryProvider:
                 story_content.story_seed
             )
         else:
+            assert story_prompt is not None
             # If a pickle file is not provided, create a new workdir first based on the given story prompt.
             # Then, generate a new story.
-            combined_workdir: CombinedWorkdir = self.story_utility.new_workdir(
+            combined_workdir = self.story_utility.new_workdir(
                 story_prompt
             )
             story_content = self.story_content_generator.generate_new_story(

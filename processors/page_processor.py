@@ -8,13 +8,13 @@ class PageProcessor:
     _FONT: str = "/Library/Fonts/Arial.ttf"
     _FONT_STORY_TEXT_SIZE: int = 12
     _FONT_TITLES_SIZE: int = 18
-    _WHITE_COLOR: Tuple = (255, 255, 255)
-    _BLACK_COLOR: Tuple = (0, 0, 0)
+    _WHITE_COLOR: Tuple[int, int, int] = (255, 255, 255)
+    _BLACK_COLOR: Tuple[int, int, int] = (0, 0, 0)
 
     def create_page(
         self, workdir: str, story_page_content: StoryPageContent, audio: AudioInfo
     ) -> StoryPage:
-        text_img: Image = self._create_text_image(
+        text_img: Image.Image = self._create_text_image(
             size=(199, 256),
             bg_color=self._WHITE_COLOR,
             message=story_page_content.sentence,
@@ -23,11 +23,11 @@ class PageProcessor:
         )
 
         if int(story_page_content.page_number) % 2 == 0:
-            page_image: Image = self._concat_horizontally(
+            page_image: Image.Image = self._concat_horizontally(
                 story_page_content.image, text_img
             )
         else:
-            page_image: Image = self._concat_horizontally(
+            page_image = self._concat_horizontally(
                 text_img, story_page_content.image
             )
 
@@ -42,7 +42,7 @@ class PageProcessor:
             audio=audio,
         )
 
-    def create_start_page(self, workdir: str, prompt: str) -> Image:
+    def create_start_page(self, workdir: str, prompt: str) -> str:
         text_img = self._create_text_image(
             size=(455, 256),
             bg_color=self._BLACK_COLOR,
@@ -56,7 +56,7 @@ class PageProcessor:
         text_img.save(page_filepath)
         return page_filepath
 
-    def create_end_page(self, workdir: str):
+    def create_end_page(self, workdir: str) -> str:
         text_img = self._create_text_image(
             size=(455, 256),
             bg_color=self._BLACK_COLOR,
@@ -71,11 +71,14 @@ class PageProcessor:
         return page_filepath
 
     @staticmethod
-    def _concat_horizontally(image_left: Image, image_right: Image) -> Image:
+    def _concat_horizontally(image_left: Image.Image, image_right: Image.Image) -> Image.Image:
         """Concatenate the given 2 images horizontally by putting them next to each other"""
 
         if image_left.height != image_right.height:
-            raise f"To concatenate 2 images horizontally," f"the height of the 2 images must be the same: {image_left.height} != {image_right.height}"
+            raise RuntimeError(
+                f"To concatenate 2 images horizontally,"
+                f"the height of the 2 images must be the same: {image_left.height} != {image_right.height}"
+            )
         dst = Image.new(
             "RGB", (image_left.width + image_right.width, image_left.height)
         )
@@ -84,7 +87,7 @@ class PageProcessor:
         return dst
 
     @staticmethod
-    def _inject_newlines(message, chunk_size=4) -> str:
+    def _inject_newlines(message: str, chunk_size: int = 4) -> str:
         """Breakdown the given message/sentence by injecting newlines every X words
 
         Args:
@@ -95,7 +98,7 @@ class PageProcessor:
         """
         message = message.replace("\n", "")
         words = message.split()
-        splits = [words[i : i + chunk_size] for i in range(0, len(words), chunk_size)]
+        splits = [words[i: i + chunk_size] for i in range(0, len(words), chunk_size)]
         sentences = [" ".join(spl) for spl in splits]
         return "\n".join(sentences)
 
@@ -104,10 +107,10 @@ class PageProcessor:
         size: Tuple[int, int],
         bg_color: Tuple[int, int, int],
         message: str,
-        font: ImageFont,
+        font: ImageFont.FreeTypeFont,
         font_color: Tuple[int, int, int],
         should_inject_newlines: bool = True,
-    ) -> Image:
+    ) -> Image.Image:
         """Create an image with the give text on it
 
         Args:

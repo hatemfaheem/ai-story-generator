@@ -1,5 +1,6 @@
 import os
 from io import BytesIO
+from typing import Tuple
 
 import openai
 import requests
@@ -24,22 +25,19 @@ class ImageGenerator:
 
     @staticmethod
     def download_image(
-        workdir: str, url: str, prompt: str, image_number: str
-    ) -> (Image, str):
+        workdir: str, url: str, image_number: str
+    ) -> Tuple[Image.Image, str]:
         """Download the image from the given url
 
         Args:
             workdir: The workdir where to download the image
             url: The url of the image to download
-            prompt: The prompt/sentence that used to generate the image. Will be added as a metadata in the image file
             image_number: The number of the image in the story sequence
 
         Returns: A pair of Image object and image file path
-
         """
         response = requests.get(url)
         img = Image.open(BytesIO(response.content))
-        img.prompt = prompt
         filepath = os.path.join(workdir, f"image_{image_number}.png")
         img.save(filepath)
         return img, filepath

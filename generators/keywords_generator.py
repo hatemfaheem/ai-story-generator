@@ -5,7 +5,7 @@ from data_models import StoryContent
 
 
 class KeywordsGenerator:
-    FIXED_KEYWORDS = [
+    _FIXED_KEYWORDS = [
         "ai",
         "openai",
         "image_generation",
@@ -32,7 +32,7 @@ class KeywordsGenerator:
         Returns: A list of the most significant keywords in the story
         """
         keyword_data = self.model.extract_keywords(story_content.raw_text)
-        keywords = self.FIXED_KEYWORDS + [
+        keywords = self._FIXED_KEYWORDS + [
             keyword_entry[0] for keyword_entry in keyword_data
         ]
 

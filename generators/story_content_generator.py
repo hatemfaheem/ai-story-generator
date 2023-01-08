@@ -41,7 +41,6 @@ class StoryContentGenerator:
             image, image_path = self.image_generator.download_image(
                 workdir=workdir_images,
                 url=url,
-                prompt=processed_sentences[i],
                 image_number=image_number,
             )
             story_page_content = StoryPageContent(
