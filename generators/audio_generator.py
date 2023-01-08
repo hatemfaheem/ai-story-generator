@@ -7,12 +7,15 @@ from data_models import StoryPageContent, AudioInfo
 class AudioGenerator:
     @staticmethod
     def generate_audio(workdir: str, story_page_content: StoryPageContent) -> AudioInfo:
+        """Preform text to speech and generate an audio file for the given story page
+
+        Args:
+            workdir: The workdir where to save the audio files
+            story_page_content: The content of a single page from the story
+
+        Returns: A local file path for the generated audio file
         """
-        Preform text to speech and generate an audio file for the given story page
-        :param workdir: the workdir where to save the audio files
-        :param story_page_content: The content of a single page from the story
-        :return: A local file path for the generated audio file
-        """
+
         print(f"Generating audio for: {story_page_content.sentence}")
         audio = gTTS(text=story_page_content.sentence, lang="en", slow=True)
         mp3_file = os.path.join(workdir, f"audio_{story_page_content.page_number}.mp3")
