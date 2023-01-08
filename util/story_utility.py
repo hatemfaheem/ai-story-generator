@@ -6,13 +6,15 @@ from data_models import StoryContent, CombinedWorkdir
 
 
 class StoryUtility:
-
     @staticmethod
     def save_story(workdir: str, story_content: StoryContent) -> None:
-        """
-        Save the given story to disk
-        :param workdir: directory where to save the story
-        :param story_content: contents of the story
+        """Save the given story to disk
+
+        Args:
+            workdir: The root directory of the story
+            story_content: The contents of the story
+
+        Returns: Nothing
         """
         with open(os.path.join(workdir, f"story_content.pickle"), "wb") as file:
             pickle.dump(story_content, file)
@@ -22,10 +24,12 @@ class StoryUtility:
 
     @staticmethod
     def load_story_from_pickle(pickle_file: str) -> StoryContent:
-        """
-        Load the given story from pickle file
-        :param pickle_file: a pickle file for a previously generated story
-        :return: The story content
+        """Load the given story from pickle file
+
+        Args:
+            pickle_file: A pickle file for a previously generated story
+
+        Returns: The story content
         """
         print("Loading existing story")
         with open(pickle_file, "rb") as file:
@@ -51,7 +55,7 @@ class StoryUtility:
             workdir=workdir,
             workdir_images=workdir_images,
             workdir_pages=workdir_pages,
-            workdir_audio=workdir_audio
+            workdir_audio=workdir_audio,
         )
 
     @staticmethod

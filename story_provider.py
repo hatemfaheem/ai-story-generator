@@ -6,42 +6,56 @@ from util.story_utility import StoryUtility
 
 
 class StoryProvider:
-	"""
-	Provide the contents of the story (image and text).
-	"""
+    """
+    Provide the contents of the story (image and text).
+    """
 
-	def __init__(self, story_utility: StoryUtility, story_content_generator: StoryContentGenerator):
-		self.story_utility = story_utility
-		self.story_content_generator = story_content_generator
+    def __init__(
+        self,
+        story_utility: StoryUtility,
+        story_content_generator: StoryContentGenerator,
+    ):
+        self.story_utility = story_utility
+        self.story_content_generator = story_content_generator
 
-	def generate_or_load(
-			self, story_prompt: Optional[str], pickle_file: Optional[str]
-	) -> [CombinedWorkdir, StoryContent]:
-		"""
-		Generate a new story or load existing story from pickle file.
-		"""
+    def generate_or_load(
+        self, story_prompt: Optional[str], pickle_file: Optional[str]
+    ) -> [CombinedWorkdir, StoryContent]:
+        """Generate a new story or load existing story from pickle file."""
 
-		if story_prompt is None and pickle_file is None:
-			raise RuntimeError("You have to provide either a prompt or a pickle file.")
+        if story_prompt is None and pickle_file is None:
+            raise RuntimeError("You have to provide either a prompt or a pickle file.")
 
-		if story_prompt and pickle_file:
-			raise RuntimeError("You have to provide either a prompt or a pickle file, not both.")
+        if story_prompt and pickle_file:
+            raise RuntimeError(
+                "You have to provide either a prompt or a pickle file, not both."
+            )
 
-		if pickle_file:
-			# If a pickle file is provided, read it then create a new workdir based on the observed story seed.
-			# This enables continuation without recalling expensive text/image generation APIs.
-			# And it also avoids overriding previous work, always create a new workdir.
-			story_content = self.story_utility.load_story_from_pickle(pickle_file=pickle_file)
-			combined_workdir: CombinedWorkdir = self.story_utility.new_workdir(story_content.story_seed)
-		else:
-			# If a pickle file is not provided, create a new workdir first based on the given story prompt.
-			# Then, generate a new story.
-			combined_workdir: CombinedWorkdir = self.story_utility.new_workdir(story_prompt)
-			story_content = self.story_content_generator.generate_new_story(
-				workdir_images=combined_workdir.workdir_images, story_seed_prompt=story_prompt)
+        if pickle_file:
+            # If a pickle file is provided, read it then create a new workdir based on the observed story seed.
+            # This enables continuation without recalling expensive text/image generation APIs.
+            # And it also avoids overriding previous work, always create a new workdir.
+            story_content = self.story_utility.load_story_from_pickle(
+                pickle_file=pickle_file
+            )
+            combined_workdir: CombinedWorkdir = self.story_utility.new_workdir(
+                story_content.story_seed
+            )
+        else:
+            # If a pickle file is not provided, create a new workdir first based on the given story prompt.
+            # Then, generate a new story.
+            combined_workdir: CombinedWorkdir = self.story_utility.new_workdir(
+                story_prompt
+            )
+            story_content = self.story_content_generator.generate_new_story(
+                workdir_images=combined_workdir.workdir_images,
+                story_seed_prompt=story_prompt,
+            )
 
-		# Save the story content anyway. If it's new, save it for later access/continuation.
-		# If it's loaded from pickle, re-save it to the new workdir for easy debugging.
-		self.story_utility.save_story(workdir=combined_workdir.workdir, story_content=story_content)
+        # Save the story content anyway. If it's new, save it for later access/continuation.
+        # If it's loaded from pickle, re-save it to the new workdir for easy debugging.
+        self.story_utility.save_story(
+            workdir=combined_workdir.workdir, story_content=story_content
+        )
 
-		return combined_workdir, story_content
+        return combined_workdir, story_content
