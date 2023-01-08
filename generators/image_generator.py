@@ -7,18 +7,20 @@ from PIL import Image
 
 
 class ImageGenerator:
-    @staticmethod
-    def generate_image(prompt: str) -> str:
+    _IMAGE_SIZE: str = "256x256"
+
+    def generate_image(self, prompt: str) -> str:
         """Generate an image for the given prompt/sentence
 
         Args:
             prompt: the text to generate an image for
 
-        Returns: A url for the generated image
+        Returns: The url for the generated image
         """
-        response = openai.Image.create(prompt=prompt, n=1, size="256x256")
-        print(f"Generated image for prompt '{prompt}': {response['data'][0]['url']}")
-        return response["data"][0]["url"]
+        response = openai.Image.create(prompt=prompt, n=1, size=self._IMAGE_SIZE)
+        url = response["data"][0]["url"]
+        print(f"Generated image for prompt '{prompt}': {url}")
+        return url
 
     @staticmethod
     def download_image(

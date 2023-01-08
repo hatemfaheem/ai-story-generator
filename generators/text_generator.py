@@ -5,7 +5,7 @@ from processors.text_processor import TextProcessor
 
 
 class TextGenerator:
-    MAX_TOKENS: int = 256
+    _MAX_TOKENS: int = 256
 
     def __init__(self, text_processor: TextProcessor):
         self.text_processor = text_processor
@@ -21,7 +21,7 @@ class TextGenerator:
         story_content = openai.Completion.create(
             model="text-davinci-003",
             prompt="Give me a story about " + prompt,
-            max_tokens=self.MAX_TOKENS,
+            max_tokens=self._MAX_TOKENS,
             temperature=0,
         )
         story_raw_text = story_content["choices"][0]["text"]
