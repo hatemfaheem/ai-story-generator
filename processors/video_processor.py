@@ -1,4 +1,10 @@
 import os
+import random
+from os import listdir
+from os.path import isfile, join
+from typing import List
+
+from moviepy.audio.fx.volumex import volumex
 
 from data_models import Story
 
@@ -10,6 +16,9 @@ class VideoProcessor:
     _FPS: int = 24
     _FRAME_START_DURATION: int = 4
     _FRAME_END_DURATION: int = 4
+    _BACKGROUND_MUSIC_PATH: str = "./music/"
+    _BACKGROUND_MUSIC_EXT: str = ".mp3"
+    _BACKGROUND_MUSIC_VOLUME_FACTOR: float = 0.1
 
     """Each page duration is set to the length of the text to speech audio + audio_gap"""
     _AUDIO_GAP: float = 1.0
@@ -52,5 +61,27 @@ class VideoProcessor:
         final_clip = mpy.concatenate_videoclips(
             [start_frame_clip, clip, end_frame_clip], method="compose"
         )
+
+        self._add_background_music(final_clip)
+
         final_clip.write_videofile(clip_filepath, fps=self._FPS)
         return clip_filepath
+
+    def _add_background_music(self, video_clip):
+        background_music_filepath = self._get_background_music_filename()
+        print(f"Background music filepath: {background_music_filepath}")
+        background_music = mpy.AudioFileClip(background_music_filepath).fx(
+            volumex, self._BACKGROUND_MUSIC_VOLUME_FACTOR
+        )
+        video_clip.audio = mpy.CompositeAudioClip([video_clip.audio, background_music])
+        return video_clip
+
+    def _get_background_music_filename(self) -> str:
+        """Returns: A path to a mp3 file to be used as a background music."""
+        music_files: List[str] = [
+            join(self._BACKGROUND_MUSIC_PATH, filename)
+            for filename in listdir(self._BACKGROUND_MUSIC_PATH)
+            if isfile(join(self._BACKGROUND_MUSIC_PATH, filename))
+            and filename.endswith(self._BACKGROUND_MUSIC_EXT)
+        ]
+        return random.choice(music_files)
