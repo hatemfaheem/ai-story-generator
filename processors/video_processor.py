@@ -21,7 +21,7 @@ class VideoProcessor:
     _BACKGROUND_MUSIC_VOLUME_FACTOR: float = 0.1
 
     """Each page duration is set to the length of the text to speech audio + audio_gap"""
-    _AUDIO_GAP: float = 1.0
+    _AUDIO_GAP: float = 0.5
 
     def generate_video(self, workdir: str, story: Story) -> str:
         """Create a video for the given story
