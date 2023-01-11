@@ -1,5 +1,8 @@
 import os
 from typing import Tuple
+
+import numpy
+from fast_colorthief import get_dominant_color
 from PIL import ImageFont, Image, ImageDraw
 from data_models import StoryPageContent, StoryPage, AudioInfo
 
@@ -10,13 +13,17 @@ class PageProcessor:
     _FONT_TITLES_SIZE: int = 18
     _WHITE_COLOR: Tuple[int, int, int] = (255, 255, 255)
     _BLACK_COLOR: Tuple[int, int, int] = (0, 0, 0)
+    _BACKGROUND_TINT_FACTOR: float = 0.7
 
     def create_page(
         self, workdir: str, story_page_content: StoryPageContent, audio: AudioInfo
     ) -> StoryPage:
+
+        background_color = self._calculate_background_color(story_page_content)
+
         text_img: Image.Image = self._create_text_image(
             size=(199, 256),
-            bg_color=self._WHITE_COLOR,
+            bg_color=background_color,
             message=story_page_content.sentence,
             font=ImageFont.truetype(self._FONT, self._FONT_STORY_TEXT_SIZE),
             font_color=self._BLACK_COLOR,
@@ -67,6 +74,19 @@ class PageProcessor:
         page_filepath = os.path.join(workdir, f"page_end.png")
         text_img.save(page_filepath)
         return page_filepath
+
+    def _calculate_background_color(self, story_page_content: StoryPageContent):
+        rgba_image = story_page_content.image.convert("RGBA")
+        ndarray = numpy.array(rgba_image).astype(numpy.uint8)
+        dominant_color = get_dominant_color(ndarray, quality=1)
+        return self._lighten_color(dominant_color)
+
+    def _lighten_color(self, color: Tuple[int, int, int]) -> Tuple[int, int, int]:
+        return (
+            int(color[0] + (255 - color[0]) * self._BACKGROUND_TINT_FACTOR),
+            int(color[1] + (255 - color[1]) * self._BACKGROUND_TINT_FACTOR),
+            int(color[2] + (255 - color[2]) * self._BACKGROUND_TINT_FACTOR)
+        )
 
     @staticmethod
     def _concat_horizontally(
