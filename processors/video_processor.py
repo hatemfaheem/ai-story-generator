@@ -74,7 +74,9 @@ class VideoProcessor:
         background_music = mpy.AudioFileClip(background_music_filepath).fx(
             volumex, self._BACKGROUND_MUSIC_VOLUME_FACTOR
         )
-        background_music = afx.audio_loop(background_music, duration=video_clip.duration)
+        background_music = afx.audio_loop(
+            background_music, duration=video_clip.duration
+        )
         video_clip.audio = mpy.CompositeAudioClip([video_clip.audio, background_music])
         return video_clip
 

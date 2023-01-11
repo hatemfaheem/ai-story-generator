@@ -19,7 +19,7 @@ class AudioGeneratorPolly(AbstractAudioGenerator):
     def __init__(self, aws_polly_credentials_provider: AwsPollyCredentialsProvider):
         self.session = Session(
             aws_access_key_id=aws_polly_credentials_provider.access_key,
-            aws_secret_access_key=aws_polly_credentials_provider.secret_key
+            aws_secret_access_key=aws_polly_credentials_provider.secret_key,
         )
         self.polly = self.session.client("polly")
 
@@ -31,7 +31,9 @@ class AudioGeneratorPolly(AbstractAudioGenerator):
 
         # Access the audio stream from the response
         if response and "AudioStream" in response:
-            mp3_filepath = self._handle_polly_response(workdir, story_page_content, response)
+            mp3_filepath = self._handle_polly_response(
+                workdir, story_page_content, response
+            )
             length_in_seconds = self._get_length_in_seconds(mp3_filepath)
             return AudioInfo(mp3_filepath, length_in_seconds)
         else:
@@ -55,7 +57,9 @@ class AudioGeneratorPolly(AbstractAudioGenerator):
             print(f"Error performing text to speech using Polly: {error}")
             return None
 
-    def _handle_polly_response(self, workdir: str, story_page_content: StoryPageContent, response) -> str:
+    def _handle_polly_response(
+        self, workdir: str, story_page_content: StoryPageContent, response
+    ) -> str:
         # Note: Closing the stream is important because the service throttles on the
         # number of parallel connections. Here we are using contextlib.closing to
         # ensure the close method of the stream object will be called automatically

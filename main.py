@@ -41,7 +41,9 @@ def create_story_provider(openai_creds_json_filepath: str) -> StoryProvider:
 def create_story_manager(polly_creds_json_filepath: str) -> StoryManager:
     """A factory-like method for the story manager."""
     audio_generator_gtts = AudioGeneratorGtts()
-    audio_generator_polly = AudioGeneratorPolly(AwsPollyCredentialsProvider(polly_creds_json_filepath))
+    audio_generator_polly = AudioGeneratorPolly(
+        AwsPollyCredentialsProvider(polly_creds_json_filepath)
+    )
 
     keybert_model = KeyBERT()
     keywords_generator = KeywordsGenerator(model=keybert_model)
@@ -62,12 +64,14 @@ def enact(
     story_prompt: Optional[str],
     pickle_file: Optional[str],
     openai_creds_json_filepath: str,
-    polly_creds_json_filepath: str
+    polly_creds_json_filepath: str,
 ):
     story_provider: StoryProvider = create_story_provider(
         openai_creds_json_filepath=openai_creds_json_filepath
     )
-    story_manager: StoryManager = create_story_manager(polly_creds_json_filepath=polly_creds_json_filepath)
+    story_manager: StoryManager = create_story_manager(
+        polly_creds_json_filepath=polly_creds_json_filepath
+    )
     combined_workdir, story_content = story_provider.generate_or_load(
         story_prompt=story_prompt, pickle_file=pickle_file
     )
@@ -107,5 +111,5 @@ if __name__ == "__main__":
         story_prompt=args.prompt,
         pickle_file=args.pickle,
         openai_creds_json_filepath=args.openai_creds,
-        polly_creds_json_filepath=args.polly_creds
+        polly_creds_json_filepath=args.polly_creds,
     )

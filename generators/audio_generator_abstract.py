@@ -27,6 +27,4 @@ class AbstractAudioGenerator(ABC):
 
     @staticmethod
     def _get_mp3_filepath(workdir: str, story_page_content: StoryPageContent) -> str:
-        return os.path.join(
-            workdir, f"audio_{story_page_content.page_number}.mp3"
-        )
+        return os.path.join(workdir, f"audio_{story_page_content.page_number}.mp3")
