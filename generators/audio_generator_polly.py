@@ -13,7 +13,7 @@ class AudioGeneratorPolly(AbstractAudioGenerator):
     _VOICE_ID: str = "Kevin"
     _OUTPUT_FORMAT_MP3: str = "mp3"
     _LANGUAGE_CODE_EN_US: str = "en-US"
-    _SPEED: str = "slow"
+    _SPEED: str = "x-slow"
     _TEXT_TYPE_SSML: str = "ssml"
 
     def __init__(self, aws_polly_credentials_provider: AwsPollyCredentialsProvider):
