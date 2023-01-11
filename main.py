@@ -52,7 +52,7 @@ def create_story_manager(polly_creds_json_filepath: str) -> StoryManager:
     video_processor = VideoProcessor()
 
     return StoryManager(
-        audio_generator=audio_generator_polly,
+        audio_generator=audio_generator_gtts,
         keywords_generator=keywords_generator,
         page_processor=page_processor,
         pdf_processor=pdf_processor,
