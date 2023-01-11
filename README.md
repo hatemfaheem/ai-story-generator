@@ -57,10 +57,6 @@ Results can be found under _stories directory with a new dir prefixed with date 
 
 ## Important Note
 
-Open AI has limitations/resctrictions on what kind of content you can create. So, it may fail to generate text or images for specific words and senetences. 
+Open AI has limitations/restrictions on what kind of content you can create. So, it may fail to generate text or images for specific words and sentences. 
 
 https://openai.com/dall-e-2/
-
-```
-We’ve limited the ability for DALL·E 2 to generate violent, hate, or adult images. By removing the most explicit content from the training data, we minimized DALL·E 2’s exposure to these concepts. We also used advanced techniques to prevent photorealistic generations of real individuals’ faces, including those of public figures.
-```
