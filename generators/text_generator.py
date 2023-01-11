@@ -5,7 +5,7 @@ from processors.text_processor import TextProcessor
 
 
 class TextGenerator:
-    _MAX_TOKENS: int = 256
+    _MAX_TOKENS: int = 1024
 
     def __init__(self, text_processor: TextProcessor):
         self.text_processor = text_processor
