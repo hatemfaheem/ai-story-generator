@@ -35,7 +35,10 @@ class StoryContentGenerator:
         page_contents = []
 
         for i in range(len(processed_sentences)):
-            image_prompt = f"Generate art for {story_seed_prompt} {processed_sentences[i]} as a children's book illustration"
+            image_prompt = (
+                f"Generate art for {story_seed_prompt} '{processed_sentences[i]}'"
+                f"as a children's book illustration."
+            )
             url = self.image_generator.generate_image(prompt=image_prompt)
             image_number: str = str(i).zfill(3)
             image, image_path = self.image_generator.download_image(

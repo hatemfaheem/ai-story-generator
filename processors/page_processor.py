@@ -85,7 +85,7 @@ class PageProcessor:
         return (
             int(color[0] + (255 - color[0]) * self._BACKGROUND_TINT_FACTOR),
             int(color[1] + (255 - color[1]) * self._BACKGROUND_TINT_FACTOR),
-            int(color[2] + (255 - color[2]) * self._BACKGROUND_TINT_FACTOR)
+            int(color[2] + (255 - color[2]) * self._BACKGROUND_TINT_FACTOR),
         )
 
     @staticmethod
