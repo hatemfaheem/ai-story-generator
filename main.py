@@ -2,7 +2,8 @@ import argparse
 from typing import Optional
 
 from keybert import KeyBERT
-from generators.audio_generator import AudioGenerator
+from generators.audio_generator_gtts import AudioGeneratorGtts
+from generators.audio_generator_polly import AudioGeneratorPolly
 from generators.image_generator import ImageGenerator
 from generators.keywords_generator import KeywordsGenerator
 from generators.story_content_generator import StoryContentGenerator
@@ -13,6 +14,7 @@ from processors.text_processor import TextProcessor
 from processors.video_processor import VideoProcessor
 from story_manager import StoryManager
 from story_provider import StoryProvider
+from util.aws_polly_credentials_provider import AwsPollyCredentialsProvider
 from util.openai_credentials_provider import OpenAICredentialsProvider
 from util.story_utility import StoryUtility
 
@@ -36,9 +38,11 @@ def create_story_provider(openai_creds_json_filepath: str) -> StoryProvider:
     )
 
 
-def create_story_manager() -> StoryManager:
+def create_story_manager(polly_creds_json_filepath: str) -> StoryManager:
     """A factory-like method for the story manager."""
-    audio_generator = AudioGenerator()
+    audio_generator_gtts = AudioGeneratorGtts()
+    audio_generator_polly = AudioGeneratorPolly(AwsPollyCredentialsProvider(polly_creds_json_filepath))
+
     keybert_model = KeyBERT()
     keywords_generator = KeywordsGenerator(model=keybert_model)
     page_processor = PageProcessor()
@@ -46,7 +50,7 @@ def create_story_manager() -> StoryManager:
     video_processor = VideoProcessor()
 
     return StoryManager(
-        audio_generator=audio_generator,
+        audio_generator=audio_generator_polly,
         keywords_generator=keywords_generator,
         page_processor=page_processor,
         pdf_processor=pdf_processor,
@@ -58,11 +62,12 @@ def enact(
     story_prompt: Optional[str],
     pickle_file: Optional[str],
     openai_creds_json_filepath: str,
+    polly_creds_json_filepath: str
 ):
     story_provider: StoryProvider = create_story_provider(
         openai_creds_json_filepath=openai_creds_json_filepath
     )
-    story_manager: StoryManager = create_story_manager()
+    story_manager: StoryManager = create_story_manager(polly_creds_json_filepath=polly_creds_json_filepath)
     combined_workdir, story_content = story_provider.generate_or_load(
         story_prompt=story_prompt, pickle_file=pickle_file
     )
@@ -71,11 +76,6 @@ def enact(
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument(
-        "--openai-creds",
-        help="Credentials file in json format for Open AI org and api_key.",
-        default="openai_creds.json",
-    )
     group = parser.add_mutually_exclusive_group(required=True)
     group.add_argument(
         "--prompt",
@@ -87,9 +87,25 @@ if __name__ == "__main__":
         "For example: ./_stories/2023_01_06_17_38_47"
         "-Five_Little_Monkeys/story_content.pickle",
     )
+
+    parser.add_argument(
+        "--openai-creds",
+        help="Credentials file in json format for Open AI org and api_key.",
+        default="credentials/openai-creds.json",
+    )
+    parser.add_argument(
+        "--polly-creds",
+        help="Credentials file in json format for AWS Polly.",
+        default="credentials/polly-creds.json",
+    )
+
+    # Todo: add boolean flag for polly
+
     args = parser.parse_args()
+
     enact(
         story_prompt=args.prompt,
         pickle_file=args.pickle,
         openai_creds_json_filepath=args.openai_creds,
+        polly_creds_json_filepath=args.polly_creds
     )

@@ -1,7 +1,7 @@
 from typing import List
 
 from data_models import Story, StoryPage, StoryContent, CombinedWorkdir
-from generators.audio_generator import AudioGenerator
+from generators.audio_generator_abstract import AbstractAudioGenerator
 from generators.keywords_generator import KeywordsGenerator
 from processors.page_processor import PageProcessor
 from processors.pdf_processor import PdfProcessor
@@ -20,7 +20,7 @@ class StoryManager:
 
     def __init__(
         self,
-        audio_generator: AudioGenerator,
+        audio_generator: AbstractAudioGenerator,
         keywords_generator: KeywordsGenerator,
         page_processor: PageProcessor,
         pdf_processor: PdfProcessor,
