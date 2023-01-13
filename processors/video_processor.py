@@ -49,23 +49,14 @@ class VideoProcessor:
             # keep track of the current length
             current_start += page.audio.length_in_seconds + self._AUDIO_GAP
 
-        clip_filepath = os.path.join(workdir, self._FILENAME)
         clip = mpy.concatenate_videoclips(page_clips, method="compose")
-        clip.audio = mpy.CompositeAudioClip(audio_clips)
+        full_audio_clip = mpy.CompositeAudioClip(audio_clips)
+        full_audio_clip.write_audiofile(os.path.join(workdir, f"final_audio.wav"), fps=44100)
 
-        start_frame_clip = mpy.ImageClip(story.start_page_filepath).set_duration(
-            self._FRAME_START_DURATION
-        )
-        end_frame_clip = mpy.ImageClip(story.end_page_filepath).set_duration(
-            self._FRAME_END_DURATION
-        )
-        final_clip = mpy.concatenate_videoclips(
-            [start_frame_clip, clip, end_frame_clip], method="compose"
-        )
-
-        self._add_background_music(final_clip)
-
-        final_clip.write_videofile(clip_filepath, fps=self._FPS)
+        clip.audio = full_audio_clip
+        self._add_background_music(clip)
+        clip_filepath = os.path.join(workdir, self._FILENAME)
+        clip.write_videofile(clip_filepath, fps=self._FPS)
         return clip_filepath
 
     def _add_background_music(self, video_clip):
