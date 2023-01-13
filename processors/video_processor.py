@@ -19,7 +19,7 @@ class VideoProcessor:
     _FRAME_END_DURATION: int = 4
     _BACKGROUND_MUSIC_PATH: str = "./music/"
     _BACKGROUND_MUSIC_EXT: str = ".mp3"
-    _BACKGROUND_MUSIC_VOLUME_FACTOR: float = 0.075
+    _BACKGROUND_MUSIC_VOLUME_FACTOR: float = 0.06
 
     """Each page duration is set to the length of the text to speech audio + audio_gap"""
     _AUDIO_GAP: float = 0.5
