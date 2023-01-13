@@ -6,6 +6,8 @@ from fast_colorthief import get_dominant_color
 from PIL import ImageFont, Image, ImageDraw
 from data_models import StoryPageContent, StoryPage, AudioInfo
 
+from justifytext import justify
+
 
 class PageProcessor:
     _FONT: str = "fonts/Times-New-Roman-Bold-Italic.ttf"
@@ -14,6 +16,7 @@ class PageProcessor:
     _WHITE_COLOR: Tuple[int, int, int] = (255, 255, 255)
     _BLACK_COLOR: Tuple[int, int, int] = (0, 0, 0)
     _BACKGROUND_TINT_FACTOR: float = 0.7
+    _TEXT_JUSTIFICATION_WIDTH: int = 20
 
     def create_page(
         self, workdir: str, story_page_content: StoryPageContent, audio: AudioInfo
@@ -54,7 +57,7 @@ class PageProcessor:
             message=prompt,
             font=ImageFont.truetype(self._FONT, self._FONT_TITLES_SIZE),
             font_color=self._WHITE_COLOR,
-            should_inject_newlines=False,
+            should_justify_text=False,
         )
 
         page_filepath = os.path.join(workdir, f"page_start.png")
@@ -68,7 +71,7 @@ class PageProcessor:
             message="The End",
             font=ImageFont.truetype(self._FONT, self._FONT_TITLES_SIZE),
             font_color=self._WHITE_COLOR,
-            should_inject_newlines=False,
+            should_justify_text=False,
         )
 
         page_filepath = os.path.join(workdir, f"page_end.png")
@@ -106,22 +109,6 @@ class PageProcessor:
         dst.paste(image_right, (image_left.width, 0))
         return dst
 
-    @staticmethod
-    def _inject_newlines(message: str, chunk_size: int = 4) -> str:
-        """Breakdown the given message/sentence by injecting newlines every X words
-
-        Args:
-            message: Input message/sentence to breakdown
-            chunk_size: The number of tokens/words in each chunk
-
-        Returns: Same message as input with newlines injected
-        """
-        message = message.replace("\n", "")
-        words = message.split()
-        splits = [words[i : i + chunk_size] for i in range(0, len(words), chunk_size)]
-        sentences = [" ".join(spl) for spl in splits]
-        return "\n".join(sentences)
-
     def _create_text_image(
         self,
         size: Tuple[int, int],
@@ -129,7 +116,7 @@ class PageProcessor:
         message: str,
         font: ImageFont.FreeTypeFont,
         font_color: Tuple[int, int, int],
-        should_inject_newlines: bool = True,
+        should_justify_text: bool = True,
     ) -> Image.Image:
         """Create an image with the give text on it
 
@@ -139,15 +126,15 @@ class PageProcessor:
             message: The message/sentence to write on the image
             font: The font type to use for the text
             font_color: The text color (r, g, b)
-            should_inject_newlines: A flag to break down the text into multiple lines
+            should_justify_text: A flag to break down the text into multiple lines
 
         Returns: A newly created image with the text on it
         """
 
         text_message = message
 
-        if should_inject_newlines:
-            text_message = self._inject_newlines(message)
+        if should_justify_text:
+            text_message = "\n".join(justify(message, self._TEXT_JUSTIFICATION_WIDTH))
 
         width, height = size
         image = Image.new("RGB", size, bg_color)
