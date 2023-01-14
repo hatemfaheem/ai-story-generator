@@ -6,15 +6,7 @@ from data_models import StoryContent
 
 class KeywordsGenerator:
     _FIXED_KEYWORDS = [
-        "ai",
-        "openai",
-        "image_generation",
-        "dall-e-2",
-        "text-davinci-003",
-        "text_generation",
-        "artificial intelligence",
         "story",
-        "auto-generation",
         "kids",
     ]
 
