@@ -1,6 +1,6 @@
 from typing import List
 
-from data_models import Story, StoryPage, StoryContent, CombinedWorkdir
+from data_models import Story, StoryPage, StoryContent, CombinedWorkdir, StorySize
 from generators.audio_generator_abstract import AbstractAudioGenerator
 from generators.keywords_generator import KeywordsGenerator
 from processors.page_processor import PageProcessor
@@ -42,14 +42,17 @@ class StoryManager:
                 workdir=combined_workdir.workdir_pages,
                 story_page_content=page_content,
                 audio=audio,
+                story_size=story_content.story_size,
             )
             story_pages.append(page)
 
         start_page_filepath = self.page_processor.create_start_page(
-            workdir=combined_workdir.workdir_pages, prompt=story_content.story_seed
+            workdir=combined_workdir.workdir_pages,
+            prompt=story_content.story_seed,
+            story_size=story_content.story_size,
         )
         end_page_filepath = self.page_processor.create_end_page(
-            workdir=combined_workdir.workdir_pages
+            workdir=combined_workdir.workdir_pages, story_size=story_content.story_size
         )
         keywords = self.keywords_generator.generate_keywords(
             workdir=combined_workdir.workdir, story_content=story_content

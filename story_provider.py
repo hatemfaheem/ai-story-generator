@@ -1,6 +1,6 @@
 from typing import Optional, Tuple
 
-from data_models import StoryContent, CombinedWorkdir
+from data_models import StoryContent, CombinedWorkdir, StorySize
 from generators.story_content_generator import StoryContentGenerator
 from util.story_utility import StoryUtility
 
@@ -19,7 +19,10 @@ class StoryProvider:
         self.story_content_generator = story_content_generator
 
     def generate_or_load(
-        self, story_prompt: Optional[str], pickle_file: Optional[str]
+        self,
+        story_prompt: Optional[str],
+        pickle_file: Optional[str],
+        story_size: StorySize,
     ) -> Tuple[CombinedWorkdir, StoryContent]:
         """Generate a new story or load existing story from pickle file."""
 
@@ -50,6 +53,7 @@ class StoryProvider:
             story_content = self.story_content_generator.generate_new_story(
                 workdir_images=combined_workdir.workdir_images,
                 story_seed_prompt=story_prompt,
+                story_size=story_size,
             )
 
         # Save the story content anyway. If it's new, save it for later access/continuation.

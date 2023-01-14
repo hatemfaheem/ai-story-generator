@@ -1,6 +1,6 @@
 import openai
 
-from data_models import StoryPageContent, StoryContent
+from data_models import StoryPageContent, StoryContent, StorySize
 from generators.image_generator import ImageGenerator
 from generators.text_generator import TextGenerator
 from util.openai_credentials_provider import OpenAICredentialsProvider
@@ -19,13 +19,14 @@ class StoryContentGenerator:
         self.text_generator = text_generator
 
     def generate_new_story(
-        self, workdir_images: str, story_seed_prompt: str
+        self, workdir_images: str, story_seed_prompt: str, story_size: StorySize
     ) -> StoryContent:
         """Generate a new story for the given prompt
 
         Args:
             workdir_images: The workdir where images should be stored
             story_seed_prompt: The title/seed of the story
+            story_size: Story size configuration
 
         Returns: The contents of the newly generated story
         """
@@ -39,7 +40,9 @@ class StoryContentGenerator:
                 f"Generate art for {story_seed_prompt} '{processed_sentences[i]}'"
                 f"as a children's book illustration."
             )
-            url = self.image_generator.generate_image(prompt=image_prompt)
+            url = self.image_generator.generate_image(
+                prompt=image_prompt, story_size=story_size
+            )
             image_number: str = str(i).zfill(3)
             image, image_path = self.image_generator.download_image(
                 workdir=workdir_images,
@@ -55,5 +58,8 @@ class StoryContentGenerator:
             page_contents.append(story_page_content)
 
         return StoryContent(
-            story_seed=story_seed_prompt, raw_text=raw_text, page_contents=page_contents
+            story_seed=story_seed_prompt,
+            raw_text=raw_text,
+            page_contents=page_contents,
+            story_size=story_size,
         )

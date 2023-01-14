@@ -4,14 +4,13 @@ from typing import Tuple
 import numpy
 from fast_colorthief import get_dominant_color
 from PIL import ImageFont, Image, ImageDraw
-from data_models import StoryPageContent, StoryPage, AudioInfo
+from data_models import StoryPageContent, StoryPage, AudioInfo, StorySize
 
 from justifytext import justify
 
 
 class PageProcessor:
     _FONT: str = "fonts/Times-New-Roman-Bold-Italic.ttf"
-    _FONT_STORY_TEXT_SIZE: int = 16
     _FONT_TITLES_SIZE: int = 18
     _WHITE_COLOR: Tuple[int, int, int] = (255, 255, 255)
     _BLACK_COLOR: Tuple[int, int, int] = (0, 0, 0)
@@ -19,16 +18,20 @@ class PageProcessor:
     _TEXT_JUSTIFICATION_WIDTH: int = 20
 
     def create_page(
-        self, workdir: str, story_page_content: StoryPageContent, audio: AudioInfo
+        self,
+        workdir: str,
+        story_page_content: StoryPageContent,
+        audio: AudioInfo,
+        story_size: StorySize,
     ) -> StoryPage:
 
         background_color = self._calculate_background_color(story_page_content)
 
         text_img: Image.Image = self._create_text_image(
-            size=(199, 256),
+            size=(story_size.text_part_width, story_size.text_part_height),
             bg_color=background_color,
             message=story_page_content.sentence,
-            font=ImageFont.truetype(self._FONT, self._FONT_STORY_TEXT_SIZE),
+            font=ImageFont.truetype(self._FONT, story_size.font_size),
             font_color=self._BLACK_COLOR,
         )
 
@@ -50,9 +53,11 @@ class PageProcessor:
             audio=audio,
         )
 
-    def create_start_page(self, workdir: str, prompt: str) -> str:
+    def create_start_page(
+        self, workdir: str, prompt: str, story_size: StorySize
+    ) -> str:
         text_img = self._create_text_image(
-            size=(455, 256),
+            size=(story_size.page_width, story_size.page_height),
             bg_color=self._BLACK_COLOR,
             message=prompt,
             font=ImageFont.truetype(self._FONT, self._FONT_TITLES_SIZE),
@@ -64,9 +69,9 @@ class PageProcessor:
         text_img.save(page_filepath)
         return page_filepath
 
-    def create_end_page(self, workdir: str) -> str:
+    def create_end_page(self, workdir: str, story_size: StorySize) -> str:
         text_img = self._create_text_image(
-            size=(455, 256),
+            size=(story_size.page_width, story_size.page_height),
             bg_color=self._BLACK_COLOR,
             message="The End",
             font=ImageFont.truetype(self._FONT, self._FONT_TITLES_SIZE),

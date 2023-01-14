@@ -2,6 +2,8 @@ import argparse
 from typing import Optional
 
 from keybert import KeyBERT
+
+from data_models import StorySize
 from generators.audio_generator_gtts import AudioGeneratorGtts
 from generators.audio_generator_polly import AudioGeneratorPolly
 from generators.image_generator import ImageGenerator
@@ -52,7 +54,7 @@ def create_story_manager(polly_creds_json_filepath: str) -> StoryManager:
     video_processor = VideoProcessor()
 
     return StoryManager(
-        audio_generator=audio_generator_gtts,
+        audio_generator=audio_generator_polly,
         keywords_generator=keywords_generator,
         page_processor=page_processor,
         pdf_processor=pdf_processor,
@@ -65,6 +67,7 @@ def enact(
     pickle_file: Optional[str],
     openai_creds_json_filepath: str,
     polly_creds_json_filepath: str,
+    story_size: StorySize,
 ):
     story_provider: StoryProvider = create_story_provider(
         openai_creds_json_filepath=openai_creds_json_filepath
@@ -73,7 +76,7 @@ def enact(
         polly_creds_json_filepath=polly_creds_json_filepath
     )
     combined_workdir, story_content = story_provider.generate_or_load(
-        story_prompt=story_prompt, pickle_file=pickle_file
+        story_prompt=story_prompt, pickle_file=pickle_file, story_size=story_size
     )
     story_manager.invoke(combined_workdir=combined_workdir, story_content=story_content)
 
@@ -103,6 +106,13 @@ if __name__ == "__main__":
         default="credentials/polly-creds.json",
     )
 
+    parser.add_argument(
+        "--size",
+        help="Available sizes are 256, 512 and 1024. Unused if pickle is used.",
+        choices=["256", "512", "1024"],
+        default="256",
+    )
+
     # Todo: add boolean flag for polly
 
     args = parser.parse_args()
@@ -112,4 +122,5 @@ if __name__ == "__main__":
         pickle_file=args.pickle,
         openai_creds_json_filepath=args.openai_creds,
         polly_creds_json_filepath=args.polly_creds,
+        story_size=StorySize.get_size_from_str(args.size),
     )

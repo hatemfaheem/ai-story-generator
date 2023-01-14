@@ -51,7 +51,9 @@ class VideoProcessor:
 
         clip = mpy.concatenate_videoclips(page_clips, method="compose")
         full_audio_clip = mpy.CompositeAudioClip(audio_clips)
-        full_audio_clip.write_audiofile(os.path.join(workdir, f"final_audio.wav"), fps=44100)
+        full_audio_clip.write_audiofile(
+            os.path.join(workdir, f"final_audio.wav"), fps=44100
+        )
 
         clip.audio = full_audio_clip
         self._add_background_music(clip)
