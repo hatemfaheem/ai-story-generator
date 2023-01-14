@@ -30,7 +30,7 @@ class StorySize(Enum):
 
     @staticmethod
     def _get_font_size(size: int) -> int:
-        return {256: 16, 512: 24, 1024: 38}[size]
+        return {256: 16, 512: 38, 1024: 58}[size]
 
 
 @dataclass
