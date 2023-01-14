@@ -4,6 +4,7 @@ from typing import Optional
 from keybert import KeyBERT
 
 from data_models import StorySize
+from generators.audio_generator_abstract import AbstractAudioGenerator
 from generators.audio_generator_gtts import AudioGeneratorGtts
 from generators.audio_generator_polly import AudioGeneratorPolly
 from generators.image_generator import ImageGenerator
@@ -40,11 +41,22 @@ def create_story_provider(openai_creds_json_filepath: str) -> StoryProvider:
     )
 
 
-def create_story_manager(polly_creds_json_filepath: str) -> StoryManager:
+def create_audio_generator(
+    polly_creds_json_filepath: str, use_polly: bool
+) -> AbstractAudioGenerator:
+    if use_polly:
+        return AudioGeneratorPolly(
+            AwsPollyCredentialsProvider(polly_creds_json_filepath)
+        )
+    return AudioGeneratorGtts()
+
+
+def create_story_manager(
+    polly_creds_json_filepath: str, use_polly: bool
+) -> StoryManager:
     """A factory-like method for the story manager."""
-    audio_generator_gtts = AudioGeneratorGtts()
-    audio_generator_polly = AudioGeneratorPolly(
-        AwsPollyCredentialsProvider(polly_creds_json_filepath)
+    audio_generator = create_audio_generator(
+        polly_creds_json_filepath=polly_creds_json_filepath, use_polly=use_polly
     )
 
     keybert_model = KeyBERT()
@@ -54,7 +66,7 @@ def create_story_manager(polly_creds_json_filepath: str) -> StoryManager:
     video_processor = VideoProcessor()
 
     return StoryManager(
-        audio_generator=audio_generator_polly,
+        audio_generator=audio_generator,
         keywords_generator=keywords_generator,
         page_processor=page_processor,
         pdf_processor=pdf_processor,
@@ -68,12 +80,13 @@ def enact(
     openai_creds_json_filepath: str,
     polly_creds_json_filepath: str,
     story_size: StorySize,
+    use_polly: bool,
 ):
     story_provider: StoryProvider = create_story_provider(
         openai_creds_json_filepath=openai_creds_json_filepath
     )
     story_manager: StoryManager = create_story_manager(
-        polly_creds_json_filepath=polly_creds_json_filepath
+        polly_creds_json_filepath=polly_creds_json_filepath, use_polly=use_polly
     )
     combined_workdir, story_content = story_provider.generate_or_load(
         story_prompt=story_prompt, pickle_file=pickle_file, story_size=story_size
@@ -113,7 +126,12 @@ if __name__ == "__main__":
         default="256",
     )
 
-    # Todo: add boolean flag for polly
+    parser.add_argument(
+        "--polly",
+        default=False,
+        action="store_true",
+        help="Use AWS Polly for text to speech.",
+    )
 
     args = parser.parse_args()
 
@@ -123,4 +141,5 @@ if __name__ == "__main__":
         openai_creds_json_filepath=args.openai_creds,
         polly_creds_json_filepath=args.polly_creds,
         story_size=StorySize.get_size_from_str(args.size),
+        use_polly=args.polly,
     )
