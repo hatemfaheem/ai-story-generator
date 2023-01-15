@@ -8,6 +8,8 @@ from data_models import StoryPageContent, StoryPage, AudioInfo, StorySize
 
 from justifytext import justify
 
+from util.gradient_image import GradientImage
+
 
 class PageProcessor:
     _FONT: str = "fonts/Times-New-Roman-Bold-Italic.ttf"
@@ -16,6 +18,8 @@ class PageProcessor:
     _BLACK_COLOR: Tuple[int, int, int] = (0, 0, 0)
     _BACKGROUND_TINT_FACTOR: float = 0.7
     _TEXT_JUSTIFICATION_WIDTH: int = 20
+    _PAPER_BLEND_FACTOR: float = 0.1
+    _PAPER_IMAGE_PATH: str = "./images/paper.jpeg"
 
     def create_page(
         self,
@@ -42,6 +46,7 @@ class PageProcessor:
         else:
             page_image = self._concat_horizontally(text_img, story_page_content.image)
 
+        page_image = self._add_paper_effect(page_image)
         page_filepath = os.path.join(
             workdir, f"page_{story_page_content.page_number}.png"
         )
@@ -82,6 +87,11 @@ class PageProcessor:
         page_filepath = os.path.join(workdir, f"page_end.png")
         text_img.save(page_filepath)
         return page_filepath
+
+    def _add_paper_effect(self, page_image: Image) -> Image:
+        paper: Image = Image.open(self._PAPER_IMAGE_PATH).convert(page_image.mode)
+        paper = paper.resize(page_image.size)
+        return Image.blend(page_image, paper, self._PAPER_BLEND_FACTOR)
 
     def _calculate_background_color(self, story_page_content: StoryPageContent):
         rgba_image = story_page_content.image.convert("RGBA")
@@ -142,7 +152,7 @@ class PageProcessor:
             text_message = "\n".join(justify(message, self._TEXT_JUSTIFICATION_WIDTH))
 
         width, height = size
-        image = Image.new("RGB", size, bg_color)
+        image = GradientImage(color=bg_color, size=size).get()
         draw = ImageDraw.Draw(image)
         x, y, w, h = draw.textbbox((0, 0), text_message, font=font)
         draw.text(
