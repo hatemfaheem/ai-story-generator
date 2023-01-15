@@ -12,7 +12,7 @@ from util.gradient_image import GradientImage
 
 
 class PageProcessor:
-    _FONT: str = "fonts/Times-New-Roman-Bold-Italic.ttf"
+    _FONT: str = "fonts/Playfulist.ttf"
     _FONT_TITLES_SIZE: int = 18
     _WHITE_COLOR: Tuple[int, int, int] = (255, 255, 255)
     _BLACK_COLOR: Tuple[int, int, int] = (0, 0, 0)
