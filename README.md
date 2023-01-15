@@ -12,7 +12,7 @@ Generate stories using AI. From text to story (pdf and video).
 
 ![Alt text](docs/high-level-diagram.png?raw=true "Title")
 
-## Prerequisuites
+## Prerequisites
 
 Install `requirements.txt`.
 
@@ -49,6 +49,20 @@ Replace "The Friendly Panda" with your favorite story title/prompt.
 
 ```
 python3 main.py --prompt "The Friendly Panda"
+```
+
+## Using AWS Polly
+
+1. Go to AWS console.
+2. Create an IAM User.
+3. Attach existing policy `AmazonPollyFullAccess`
+4. Under `./credentials` create a new file called `polly-creds.json` and add the below content.
+
+```
+{
+  "access_key": "xxxxxxxx",
+  "secret_key": "xxxxxxxxxxxxxxxxxxxxxxxx"
+}
 ```
 
 ## Check Results
