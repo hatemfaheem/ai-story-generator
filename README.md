@@ -1,12 +1,24 @@
+<div align="center">
+<br/>
+<img src="docs/poster-ai-story.png" alt="drawing" width="200"/>
+
 # AI Story Generator
+
+<p>Generate stories using AI. From text to story (pdf and video)..</p>
+
+<a href="https://www.youtube.com/@ai-story" target="_blank">
+    <img src="https://www.logo.wine/a/logo/YouTube/YouTube-Icon-Full-Color-Logo.wine.svg" width="50">
+</a>
+
+</div>
+
+## Overview
 
 Generate stories using AI. From text to story (pdf and video).
 
 Example videos can be found here: https://www.youtube.com/@ai-story
 
-A sample story can be found under _stories dir. The sample contains raw content (image, text and audio) alongside `final_video.mp4` and `final_story.pdf`
-
-Generate stories using AI. From text to story (pdf and video).
+A sample story can be found under _stories dir. The sample contains raw content (image, text and audio) alongside `final_video.mp4` and `final_story.pdf`.
 
 ## High Level Diagram
 
