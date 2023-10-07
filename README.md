@@ -11,7 +11,7 @@
 </a>
 
 <a href="https://dev.to/hatemelseidy/building-ai-powered-visual-story-generator-with-python-part-1-160e" target="_blank">
-    <img src="https://dev-to-uploads.s3.amazonaws.com/uploads/logos/resized_logo_UQww2soKuUsjaOGNB38o.png" width="50">
+    <img src="https://dev-to-uploads.s3.amazonaws.com/uploads/logos/resized_logo_UQww2soKuUsjaOGNB38o.png" width="40">
 </a>
 
 </div>
