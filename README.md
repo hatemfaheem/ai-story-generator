@@ -1,6 +1,6 @@
 <div align="center">
 <br/>
-<img src="docs/poster-ai-story.png" alt="drawing" width="200"/>
+<img src="docs/poster-ai-story.jpg" alt="drawing" width="200"/>
 
 # AI Story Generator
 
