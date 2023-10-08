@@ -6,7 +6,7 @@
 
 <p>Generate stories using AI. From text to story (pdf and video)..</p>
 
-<a href="https://www.youtube.com/@ai-story" target="_blank">
+<a href="https://youtu.be/xURG3wQ0Jtg" target="_blank">
     <img src="https://www.logo.wine/a/logo/YouTube/YouTube-Icon-Full-Color-Logo.wine.svg" width="50">
 </a>
 
